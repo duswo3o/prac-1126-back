@@ -1,5 +1,3 @@
-from logging import raiseExceptions
-
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import Serializer, ModelSerializer
 from rest_framework import serializers

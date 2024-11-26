@@ -7,6 +7,7 @@ from rest_framework import status
 
 from .serializers import SignUpSerializer
 
+
 # Create your views here.
 @csrf_exempt
 @api_view(["POST"])
@@ -16,3 +17,9 @@ def signup(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def signin(request):
+    email = request.data["email"]
+    password = request.data["password"]
