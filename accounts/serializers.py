@@ -31,3 +31,9 @@ class SignUpSerializer(ModelSerializer):
             nickname=validated_data["nickname"],
         )
         return user
+
+
+class UserProfileSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["email", "nickname"]
