@@ -1,13 +1,14 @@
+from django.core.serializers import serialize
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Post
+from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 
 
-# Create your views here.
+# 포스트 생성
 @api_view(["POST"])
 def create_post(request):
     if request.user.is_authenticated:
@@ -21,6 +22,7 @@ def create_post(request):
     )
 
 
+# 포스트 목록 조회
 @api_view(["GET"])
 def posts_list(request):
     posts = Post.objects.all()
@@ -28,6 +30,7 @@ def posts_list(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# 포스트 상세 조회
 @api_view(["GET"])
 def get_post(request, id):
     post = get_object_or_404(Post, id=id)
@@ -35,6 +38,7 @@ def get_post(request, id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# 포스트 수정
 @api_view(["POST"])
 def update_post(request, id):
     if request.user.is_authenticated:
@@ -51,6 +55,7 @@ def update_post(request, id):
     return Response({"message": "로그인이 필요한 서비스입니다."})
 
 
+# 포스트 삭제
 @api_view(["POST"])
 def delete_post(request, id):
     if request.user.is_authenticated:
@@ -69,6 +74,7 @@ def delete_post(request, id):
     )
 
 
+# 댓글 생성
 @api_view(["POST"])
 def create_comment(request, id):
     if request.user.is_authenticated:
@@ -85,6 +91,47 @@ def create_comment(request, id):
     )
 
 
+# 댓글 수정
+@api_view(["POST"])
+def update_comment(request, comment_id):
+    user = request.user
+    if user.is_authenticated:
+        comment = get_object_or_404(Comment, id=comment_id)
+        if user == comment.author:
+            serializer = CommentSerializer(
+                instance=comment, data=request.data, partial=True
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"message": "수정 권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST
+        )
+    return Response({"message": "로그인이 필요한 서비스입니다."})
+
+
+# 댓글 삭제
+@api_view(["POST"])
+def delete_comment(request, comment_id):
+    user = request.user
+    if user.is_authenticated:
+        comment = get_object_or_404(Comment, id=comment_id)
+        if user == comment.author:
+            comment.delete()
+            return Response(
+                {"message": "댓글이 삭제되었습니다"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return Response(
+            {"message": "삭제 권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST
+        )
+    return Response(
+        {"message": "로그인이 필요한 서비스입니다"}, status=status.HTTP_400_BAD_REQUEST
+    )
+
+
+# 게시글 좋아요
 @api_view(["POST"])
 def like_post(request, id):
     user = request.user
