@@ -1,4 +1,3 @@
-from django.core.serializers import serialize
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -89,6 +88,14 @@ def create_comment(request, id):
     return Response(
         {"message": "로그인이 필요한 서비스입니다."}, status=status.HTTP_400_BAD_REQUEST
     )
+
+
+@api_view(["GET"])
+def get_comment(request, id):
+    post = get_object_or_404(Post, id=id)
+    comments = Comment.objects.filter(post=post)
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 댓글 수정
