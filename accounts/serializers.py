@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.serializers import Serializer, ModelSerializer
 from rest_framework import serializers
 
+from posts.serializers import PostSerializer
+
 User = get_user_model()
 
 
@@ -34,6 +36,8 @@ class SignUpSerializer(ModelSerializer):
 
 
 class UserProfileSerializer(ModelSerializer):
+    posts = PostSerializer(read_only=True, many=True)
+
     class Meta:
         model = User
-        fields = ["email", "nickname"]
+        fields = ["email", "nickname", "posts"]
