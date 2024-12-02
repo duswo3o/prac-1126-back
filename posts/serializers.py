@@ -28,7 +28,7 @@ class CommentSerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     author = AuthorSerializer(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
-    like = AuthorSerializer(many=True)
+    like = AuthorSerializer(many=True, read_only=True)
     like_count = serializers.IntegerField(source="like.count", read_only=True)
 
     class Meta:
