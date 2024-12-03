@@ -32,6 +32,10 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     nickname = models.CharField(max_length=16, unique=True, blank=False)
 
+    followings = models.ManyToManyField(
+        to="self", related_name="followers", blank=True, symmetrical=False
+    )
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = UserManager()  # custom UserManager 사용을 명시

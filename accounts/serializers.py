@@ -35,9 +35,17 @@ class SignUpSerializer(ModelSerializer):
         return user
 
 
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "email", "nickname"]
+
+
 class UserProfileSerializer(ModelSerializer):
     posts = PostSerializer(read_only=True, many=True)
+    followings = UserSerializer(read_only=True, many=True)
+    followers = UserSerializer(read_only=True, many=True)
 
     class Meta:
         model = User
-        fields = ["email", "nickname", "posts"]
+        fields = ["email", "nickname", "posts", "followings", "followers"]
