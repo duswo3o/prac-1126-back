@@ -49,3 +49,9 @@ class UserProfileSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "nickname", "posts", "followings", "followers"]
+
+
+class EditProfileSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["nickname", "bio", "gender"]

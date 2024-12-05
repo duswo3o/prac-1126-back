@@ -14,5 +14,6 @@ urlpatterns = [
     path("signout/", TokenBlacklistView.as_view(), name="token_blacklist"),
     path("delete/", views.delete),
     path("<str:nickname>/", views.profile),
+    path("<str:nickname>/edit-profile/", views.edit_profile),
     path("<str:nickname>/follow/", views.follow_user),
 ]

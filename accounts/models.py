@@ -25,12 +25,16 @@ class UserManager(BaseUserManager):
 
 # Create your models here.
 class User(AbstractUser):
+    GENDER_CHOICES = [("M", "남자"), ("F", "여자"), ("N", "비공개")]
+
     first_name = None
     last_name = None
     username = None
 
     email = models.EmailField(unique=True, blank=False)
     nickname = models.CharField(max_length=16, unique=True, blank=False)
+    bio = models.TextField(blank=True)
+    gender = models.CharField(choices=GENDER_CHOICES, default="N", max_length=1)
 
     followings = models.ManyToManyField(
         to="self", related_name="followers", blank=True, symmetrical=False

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import SignUpSerializer, UserProfileSerializer
+from .serializers import SignUpSerializer, UserProfileSerializer, EditProfileSerializer
 
 User = get_user_model()
 
@@ -64,3 +64,25 @@ def delete(request):
             {"message": "계정이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT
         )
     return Response({"message": "로그인이 필요한 서비스입니다."})
+
+
+@api_view(["POST"])
+def edit_profile(request, nickname):
+    login_user = request.user
+    if login_user.is_authenticated:
+        profile_user = get_object_or_404(User, nickname=nickname)
+        if login_user == profile_user:
+            serializer = EditProfileSerializer(
+                instance=profile_user, data=request.data, partial=True
+            )
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"message": "수정 권한이 없습니다."}, status=status.HTTP_400_BAD_REQUEST
+        )
+    return Response(
+        {"message": "로그인이 필요한 서비스입니다."},
+        status=status.HTTP_401_UNAUTHORIZED,
+    )
