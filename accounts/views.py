@@ -53,3 +53,14 @@ def follow_user(request, nickname):
                     status=status.HTTP_200_OK,
                 )
     return Response({"message": "로그인이 필요한 서비스 입니다."})
+
+
+@api_view(["POST"])
+def delete(request):
+    if request.user.is_authenticated:
+        user = get_object_or_404(User, id=request.user.id)
+        user.delete()
+        return Response(
+            {"message": "계정이 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT
+        )
+    return Response({"message": "로그인이 필요한 서비스입니다."})
