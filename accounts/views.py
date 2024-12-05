@@ -24,7 +24,7 @@ def signup(request):
 
 @api_view(["GET"])
 def profile(request, nickname):
-    user = User.objects.get(nickname=nickname)
+    user = get_object_or_404(User, nickname=nickname)
     serializer = UserProfileSerializer(user)
     return Response(serializer.data)
 
