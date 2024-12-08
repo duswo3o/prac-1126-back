@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         for _ in range(num_post):
             Post.objects.create(
-                image="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fvelog.velcdn.com%2Fpost-images%2Fcity7310%2Fad95d5d0-2f83-11e9-acf7-e966133010d9%2Fhello-world.png&type=sc960_832",
+                image=f"images/sample_images_0{_%13}.png",
                 content=faker.sentence(nb_words=random.randint(5, 20)),
                 author=random.choice(users),
             )

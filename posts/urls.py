@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -12,4 +14,4 @@ urlpatterns = [
     path("comment/<int:comment_id>/", views.update_comment),
     path("comment/<int:comment_id>/delete/", views.delete_comment),
     path("<int:id>/like/", views.like_post),
-]
+]  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
